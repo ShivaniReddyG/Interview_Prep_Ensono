@@ -1,0 +1,476 @@
+For a **5-year experienced DevOps Engineer (L2)** role with **Terraform, Harness CI/CD, AWS/Azure, Git, YAML, and DevOps**, interviewers typically focus on **hands-on troubleshooting, real-world scenarios, architecture decisions, and best practices** rather than basic definitions.
+
+# Terraform Interview Questions (L2)
+
+### 1. What is Terraform state? Why is it important?
+
+**Answer:**
+Terraform state maps real infrastructure to Terraform configuration. It tracks resource metadata and dependencies.
+
+### 2. How do you manage Terraform state in a team environment?
+
+**Answer:**
+
+* Remote backend (S3 + DynamoDB for AWS)
+* Azure Storage Account for Azure
+* State locking enabled
+* Versioning enabled
+
+### 3. What happens if Terraform state is deleted accidentally?
+
+**Answer:**
+Terraform loses track of resources and may attempt to recreate them. Recover using backend versioning or backups.
+
+### 4. Explain Terraform modules.
+
+**Answer:**
+Modules are reusable Terraform code components that improve standardization and maintainability.
+
+### 5. Difference between root module and child module?
+
+**Answer:**
+
+* Root module = Main execution directory
+* Child module = Reusable module called from root
+
+### 6. What are Terraform workspaces?
+
+**Answer:**
+Workspaces allow managing multiple environments (dev, qa, prod) using the same code.
+
+### 7. How do you pass variables to Terraform?
+
+**Answer:**
+
+* variables.tf
+* terraform.tfvars
+* Environment variables
+* CLI arguments
+
+### 8. What is a dynamic block?
+
+**Answer:**
+Used to generate repeated nested blocks dynamically.
+
+Example:
+
+```hcl
+dynamic "ingress" {
+  for_each = var.ports
+  content {
+    from_port = ingress.value
+    to_port   = ingress.value
+    protocol  = "tcp"
+  }
+}
+```
+
+### 9. Difference between count and for_each?
+
+**Answer:**
+
+* count uses index
+* for_each uses keys
+* for_each preferred for stable resource management
+
+### 10. How would you create resources in multiple AWS regions?
+
+**Answer:**
+Using multiple provider aliases.
+
+---
+
+# Terraform Scenario-Based Questions
+
+### Scenario 1
+
+Terraform apply fails because state is locked.
+
+What will you do?
+
+**Answer:**
+
+* Verify running pipeline
+* Check DynamoDB lock table
+* Use:
+
+```bash
+terraform force-unlock LOCK_ID
+```
+
+only after confirmation.
+
+---
+
+### Scenario 2
+
+Someone manually deleted an EC2 instance.
+
+How will Terraform react?
+
+**Answer:**
+Terraform detects drift during plan and recreates resource.
+
+---
+
+### Scenario 3
+
+A module update impacts production unexpectedly.
+
+How do you prevent this?
+
+**Answer:**
+
+* Module versioning
+* Plan review
+* Separate workspaces
+* PR approvals
+
+---
+
+# Harness CI/CD Interview Questions
+
+### 1. What are the main components of Harness?
+
+**Answer:**
+
+* Projects
+* Organizations
+* Pipelines
+* Connectors
+* Secrets
+* Environments
+* Services
+* Infrastructure Definitions
+
+### 2. Difference between Build and Deploy pipelines?
+
+**Answer:**
+Build pipeline creates artifacts.
+Deploy pipeline deploys artifacts.
+
+### 3. What are Harness Connectors?
+
+**Answer:**
+Secure integrations with:
+
+* GitHub
+* GitLab
+* Docker Hub
+* AWS
+* Azure
+* Kubernetes
+
+### 4. How do you store sensitive information in Harness?
+
+**Answer:**
+Use Harness Secrets Manager.
+
+### 5. Explain pipeline rollback.
+
+**Answer:**
+Harness automatically rolls back to previous successful deployment when deployment fails.
+
+### 6. Difference between Canary and Blue-Green deployment?
+
+**Answer:**
+Canary:
+
+* Gradual traffic shift
+
+Blue-Green:
+
+* Two identical environments
+* Instant switch
+
+### 7. How do you trigger pipelines automatically?
+
+**Answer:**
+
+* Git webhook
+* Schedule trigger
+* Artifact trigger
+
+### 8. What deployment strategies have you used in Harness?
+
+**Answer:**
+
+* Rolling
+* Blue-Green
+* Canary
+
+### 9. Explain Input Sets and Runtime Inputs.
+
+**Answer:**
+Allow parameterizing pipelines at execution time.
+
+### 10. How do you troubleshoot a failed Harness deployment?
+
+**Answer:**
+
+* Review execution logs
+* Verify connector access
+* Check delegate logs
+* Validate deployment manifests
+* Check target infrastructure
+
+---
+
+# Harness Scenario-Based Questions
+
+### Scenario 1
+
+Pipeline suddenly fails to fetch Git repository.
+
+What will you check?
+
+**Answer:**
+
+* Connector health
+* Git credentials
+* Network access
+* Repository permissions
+
+---
+
+### Scenario 2
+
+Deployment succeeded but application is unavailable.
+
+What will you verify?
+
+**Answer:**
+
+* Pods status
+* Service endpoints
+* Ingress
+* Load balancer
+* Application logs
+
+---
+
+# AWS Interview Questions
+
+### 1. Difference between Security Group and NACL?
+
+| Security Group | NACL         |
+| -------------- | ------------ |
+| Stateful       | Stateless    |
+| Instance level | Subnet level |
+
+### 2. What is an Auto Scaling Group?
+
+Automatically adds/removes instances based on metrics.
+
+### 3. Difference between ALB and NLB?
+
+**ALB**
+
+* Layer 7
+* HTTP/HTTPS
+
+**NLB**
+
+* Layer 4
+* TCP/UDP
+
+### 4. How do you secure Terraform state in AWS?
+
+**Answer:**
+
+* S3 encryption
+* Versioning
+* IAM restrictions
+* DynamoDB locking
+
+### 5. Explain IAM Roles.
+
+Provide temporary credentials to AWS resources.
+
+---
+
+# Azure Interview Questions
+
+### 1. Difference between Service Principal and Managed Identity?
+
+**Service Principal**
+
+* Requires credential management
+
+**Managed Identity**
+
+* Azure manages credentials
+
+### 2. What is Azure Resource Group?
+
+Logical container for Azure resources.
+
+### 3. Explain Azure Virtual Network.
+
+Private network for Azure resources.
+
+### 4. What is Azure Key Vault?
+
+Stores:
+
+* Secrets
+* Certificates
+* Keys
+
+### 5. What is Azure DevOps Agent?
+
+Worker machine executing pipelines.
+
+---
+
+# Git Interview Questions
+
+### 1. Difference between merge and rebase?
+
+**Merge**
+
+* Preserves history
+
+**Rebase**
+
+* Creates cleaner history
+
+### 2. How do you resolve merge conflicts?
+
+* Identify conflicting files
+* Modify content
+* Add and commit changes
+
+### 3. Difference between git fetch and git pull?
+
+**Fetch**
+
+```bash
+git fetch
+```
+
+Downloads changes only.
+
+**Pull**
+
+```bash
+git pull
+```
+
+Fetch + merge.
+
+### 4. Explain branching strategy you use.
+
+**Answer:**
+
+* Feature branches
+* Develop branch
+* Release branch
+* Main branch
+
+### 5. How do you revert a bad commit?
+
+```bash
+git revert <commit-id>
+```
+
+---
+
+# YAML Questions
+
+### 1. What is YAML?
+
+Human-readable configuration language used in:
+
+* Kubernetes
+* Harness
+* Azure DevOps
+* GitHub Actions
+
+### 2. What are common YAML mistakes?
+
+* Wrong indentation
+* Tabs instead of spaces
+* Invalid syntax
+
+### 3. Difference between:
+
+```yaml
+value: "123"
+```
+
+and
+
+```yaml
+value: 123
+```
+
+First is string, second is integer.
+
+---
+
+# DevOps Scenario-Based Questions
+
+### Scenario 1
+
+Production deployment failed after code release.
+
+What is your approach?
+
+**Expected Answer:**
+
+1. Analyze logs
+2. Check deployment status
+3. Rollback
+4. Verify infrastructure
+5. Root cause analysis
+
+---
+
+### Scenario 2
+
+Pipeline execution time increased from 10 mins to 40 mins.
+
+How do you troubleshoot?
+
+**Answer:**
+
+* Review stage timing
+* Check agent resources
+* Parallelize jobs
+* Optimize Docker build layers
+* Review artifact downloads
+
+---
+
+### Scenario 3
+
+Developers cannot deploy to production.
+
+What would you check?
+
+**Answer:**
+
+* IAM/RBAC permissions
+* Harness roles
+* Approval stages
+* Secrets access
+* Environment permissions
+
+---
+
+### Scenario 4
+
+Terraform pipeline fails only in production workspace.
+
+What will you investigate?
+
+**Answer:**
+
+* Workspace variables
+* Backend configuration
+* Credentials
+* Resource quotas
+* Existing state drift
+
+These are the types of practical L2 questions commonly asked by companies looking for Terraform + Harness + AWS/Azure DevOps engineers with around 5 years of experience.
