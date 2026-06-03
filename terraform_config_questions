@@ -1,0 +1,372 @@
+Here are some **Terraform configuration scenario-based interview questions** where you may be asked to write Terraform code during an interview.
+
+---
+
+## Scenario 1: Create EC2 Instances in Multiple Environments
+
+**Requirement:**
+
+* Create 2 EC2 instances in Dev.
+* Create 5 EC2 instances in Prod.
+* Use the same Terraform code.
+
+### Solution
+
+```hcl
+variable "environment" {
+  default = "dev"
+}
+
+locals {
+  instance_count = var.environment == "prod" ? 5 : 2
+}
+
+resource "aws_instance" "web" {
+  count         = local.instance_count
+  ami           = "ami-123456"
+  instance_type = "t2.micro"
+
+  tags = {
+    Name = "${var.environment}-${count.index}"
+  }
+}
+```
+
+---
+
+## Scenario 2: Create Multiple Security Groups Dynamically
+
+**Requirement:**
+Create Security Groups:
+
+* web
+* app
+* db
+
+### Solution
+
+```hcl
+variable "sg_names" {
+  default = ["web", "app", "db"]
+}
+
+resource "aws_security_group" "sg" {
+  for_each = toset(var.sg_names)
+
+  name = each.value
+}
+```
+
+---
+
+## Scenario 3: Create Multiple S3 Buckets
+
+**Requirement:**
+Create:
+
+* company-dev
+* company-qa
+* company-prod
+
+### Solution
+
+```hcl
+variable "bucket_names" {
+  default = [
+    "company-dev",
+    "company-qa",
+    "company-prod"
+  ]
+}
+
+resource "aws_s3_bucket" "bucket" {
+  for_each = toset(var.bucket_names)
+
+  bucket = each.value
+}
+```
+
+---
+
+## Scenario 4: Create VPC with Public and Private Subnets
+
+**Requirement:**
+
+* 1 VPC
+* 2 Public Subnets
+* 2 Private Subnets
+
+### Solution
+
+```hcl
+resource "aws_vpc" "main" {
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "aws_subnet" "public" {
+  count = 2
+
+  vpc_id     = aws_vpc.main.id
+  cidr_block = "10.0.${count.index}.0/24"
+}
+
+resource "aws_subnet" "private" {
+  count = 2
+
+  vpc_id     = aws_vpc.main.id
+  cidr_block = "10.0.${count.index + 10}.0/24"
+}
+```
+
+---
+
+## Scenario 5: Create Resources Across Multiple Regions
+
+**Requirement:**
+Create EC2 instances in:
+
+* us-east-1
+* us-west-2
+
+### Solution
+
+```hcl
+provider "aws" {
+  region = "us-east-1"
+}
+
+provider "aws" {
+  alias  = "west"
+  region = "us-west-2"
+}
+
+resource "aws_instance" "east" {
+  ami           = "ami-123456"
+  instance_type = "t2.micro"
+}
+
+resource "aws_instance" "west" {
+  provider      = aws.west
+  ami           = "ami-123456"
+  instance_type = "t2.micro"
+}
+```
+
+---
+
+## Scenario 6: Dynamic Security Group Rules
+
+**Requirement:**
+Open ports:
+
+* 22
+* 80
+* 443
+
+### Solution
+
+```hcl
+variable "ports" {
+  default = [22, 80, 443]
+}
+
+resource "aws_security_group" "web" {
+  name = "web-sg"
+
+  dynamic "ingress" {
+    for_each = var.ports
+
+    content {
+      from_port   = ingress.value
+      to_port     = ingress.value
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
+}
+```
+
+---
+
+## Scenario 7: Remote State Backend
+
+**Requirement:**
+Store Terraform state in S3 and use DynamoDB for locking.
+
+### Solution
+
+```hcl
+terraform {
+  backend "s3" {
+    bucket         = "terraform-state-bucket"
+    key            = "prod/terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "terraform-locks"
+  }
+}
+```
+
+---
+
+## Scenario 8: Create IAM Users from a List
+
+**Requirement:**
+Create:
+
+* dev1
+* dev2
+* dev3
+
+### Solution
+
+```hcl
+variable "users" {
+  default = ["dev1", "dev2", "dev3"]
+}
+
+resource "aws_iam_user" "user" {
+  for_each = toset(var.users)
+
+  name = each.value
+}
+```
+
+---
+
+## Scenario 9: Reusable EC2 Module
+
+**Requirement:**
+Use one module to create Dev and Prod servers.
+
+### Root Module
+
+```hcl
+module "dev" {
+  source        = "./modules/ec2"
+  instance_name = "dev-server"
+}
+
+module "prod" {
+  source        = "./modules/ec2"
+  instance_name = "prod-server"
+}
+```
+
+### Module
+
+```hcl
+resource "aws_instance" "server" {
+  ami           = "ami-123456"
+  instance_type = "t2.micro"
+
+  tags = {
+    Name = var.instance_name
+  }
+}
+```
+
+---
+
+## Scenario 10: Create EC2 Instances from a Map
+
+**Requirement:**
+
+| Name | Type      |
+| ---- | --------- |
+| web  | t2.micro  |
+| app  | t3.medium |
+| db   | t3.large  |
+
+### Solution
+
+```hcl
+variable "instances" {
+  default = {
+    web = "t2.micro"
+    app = "t3.medium"
+    db  = "t3.large"
+  }
+}
+
+resource "aws_instance" "server" {
+  for_each = var.instances
+
+  ami           = "ami-123456"
+  instance_type = each.value
+
+  tags = {
+    Name = each.key
+  }
+}
+```
+
+---
+
+## Advanced L2/L3 Interview Scenarios
+
+### 1. How would you import 100 existing AWS resources into Terraform without downtime?
+
+**Expected Answer:**
+
+* Create Terraform configuration first.
+* Use `terraform import`.
+* Verify with `terraform plan`.
+* Use Terraform 1.5+ Import Blocks.
+* Avoid changes until state matches infrastructure.
+
+---
+
+### 2. How would you deploy the same infrastructure in Dev, QA, and Prod?
+
+**Expected Answer:**
+
+* Reusable modules.
+* Separate state files.
+* Separate backend keys.
+* Environment-specific variables (`tfvars`).
+
+---
+
+### 3. A resource was deleted manually in AWS. What happens?
+
+**Expected Answer:**
+
+```bash
+terraform plan
+```
+
+Terraform detects drift and recreates the resource unless configuration changed.
+
+---
+
+### 4. How would you create 50 subnets automatically?
+
+**Expected Answer:**
+Use `for_each` or `count`.
+
+```hcl
+resource "aws_subnet" "subnets" {
+  count = 50
+}
+```
+
+---
+
+### 5. How would you pass dynamic values from Jenkins to Terraform?
+
+**Expected Answer:**
+
+```bash
+terraform apply \
+-var="environment=prod" \
+-var="instance_count=5"
+```
+
+or
+
+```bash
+terraform apply \
+-var-file=prod.tfvars
+```
+
+These are the types of hands-on Terraform coding scenarios frequently asked in 5+ years DevOps interviews at companies like Infosys, Persistent, Ensono, Experian, Softility, TCS, Accenture, and Cognizant.
