@@ -1,0 +1,525 @@
+For an L2 DevOps/Cloud Engineer interview, you are **not expected to know every AWS service in detail** (AWS has 300+ services). Instead, you should understand the major services, their purpose, and how they are used in real projects.
+
+# 1. Compute Services
+
+## EC2 (Elastic Compute Cloud)
+
+**Purpose:** Virtual servers in AWS.
+
+**Project Usage:**
+
+* Host web applications.
+* Run Jenkins, GitLab, SonarQube servers.
+* Application servers behind Load Balancers.
+
+**Implementation:**
+
+* Create Launch Template.
+* Configure Security Groups.
+* Deploy in Auto Scaling Group.
+
+---
+
+## Auto Scaling Group (ASG)
+
+**Purpose:** Automatically add/remove EC2 instances.
+
+**Project Usage:**
+
+* Handle traffic spikes.
+* Improve availability.
+
+**Implementation:**
+
+* CPU >70% → Add instances.
+* CPU <30% → Remove instances.
+
+---
+
+## Lambda
+
+**Purpose:** Serverless compute.
+
+**Project Usage:**
+
+* Snapshot cleanup.
+* Trigger automation.
+* Event processing.
+
+**Implementation:**
+
+* EventBridge triggers Lambda.
+* Lambda executes Python code.
+
+---
+
+## ECS
+
+**Purpose:** Container orchestration.
+
+**Project Usage:**
+
+* Run Docker containers.
+
+**Implementation:**
+
+* Push image to ECR.
+* Deploy through ECS Service.
+
+---
+
+## EKS
+
+**Purpose:** Managed Kubernetes.
+
+**Project Usage:**
+
+* Microservices deployment.
+* Containerized applications.
+
+**Implementation:**
+
+* Create EKS Cluster.
+* Deploy workloads using Kubernetes manifests.
+
+---
+
+# 2. Storage Services
+
+## S3
+
+**Purpose:** Object storage.
+
+**Project Usage:**
+
+* Store application logs.
+* Terraform state files.
+* Static website hosting.
+* Backup storage.
+
+**Implementation:**
+
+* Versioning enabled.
+* Encryption enabled.
+* Lifecycle policies configured.
+
+---
+
+## EBS
+
+**Purpose:** Block storage for EC2.
+
+**Project Usage:**
+
+* Application data.
+* Database storage.
+
+**Implementation:**
+
+* Attach EBS volume to EC2.
+* Snapshot for backup.
+
+---
+
+## EFS
+
+**Purpose:** Shared file storage.
+
+**Project Usage:**
+
+* Shared application files.
+* Kubernetes persistent storage.
+
+**Implementation:**
+
+* Mount EFS across multiple EC2 instances.
+
+---
+
+# 3. Database Services
+
+## RDS
+
+**Purpose:** Managed relational database.
+
+**Project Usage:**
+
+* MySQL
+* PostgreSQL
+* Oracle
+
+**Implementation:**
+
+* Multi-AZ deployment.
+* Automated backups.
+* Read replicas.
+
+---
+
+## DynamoDB
+
+**Purpose:** NoSQL database.
+
+**Project Usage:**
+
+* Session storage.
+* User profile storage.
+
+**Implementation:**
+
+* Serverless database.
+* Auto scaling enabled.
+
+---
+
+## ElastiCache
+
+**Purpose:** Caching.
+
+**Project Usage:**
+
+* Reduce database load.
+* Improve application performance.
+
+**Implementation:**
+
+* Redis cluster between application and database.
+
+---
+
+# 4. Networking Services
+
+## VPC
+
+**Purpose:** Private network in AWS.
+
+**Project Usage:**
+
+* Isolate environments.
+
+**Implementation:**
+
+* Public subnet
+* Private subnet
+* Route tables
+* NAT Gateway
+
+---
+
+## Route 53
+
+**Purpose:** DNS service.
+
+**Project Usage:**
+
+* Domain management.
+* Failover routing.
+
+**Implementation:**
+
+* Create hosted zone.
+* Configure DNS records.
+
+---
+
+## Load Balancer
+
+### ALB
+
+Used for:
+
+* Web applications.
+* Path-based routing.
+
+### NLB
+
+Used for:
+
+* High-performance TCP traffic.
+
+**Implementation:**
+
+* ALB → EC2/EKS pods.
+
+---
+
+## Transit Gateway
+
+**Purpose:** Connect multiple VPCs.
+
+**Project Usage:**
+
+* Enterprise multi-account networking.
+
+**Implementation:**
+
+* Central hub for VPC connectivity.
+
+---
+
+# 5. Security Services
+
+## IAM
+
+**Purpose:** Authentication and authorization.
+
+**Project Usage:**
+
+* User access management.
+* Service permissions.
+
+**Implementation:**
+
+* IAM Users
+* IAM Roles
+* IAM Policies
+
+---
+
+## KMS
+
+**Purpose:** Encryption key management.
+
+**Project Usage:**
+
+* Encrypt S3.
+* Encrypt EBS.
+* Encrypt RDS.
+
+**Implementation:**
+
+* Customer-managed keys.
+
+---
+
+## Secrets Manager
+
+**Purpose:** Store passwords securely.
+
+**Project Usage:**
+
+* Database credentials.
+* API tokens.
+
+**Implementation:**
+
+* Application retrieves secrets dynamically.
+
+---
+
+## WAF
+
+**Purpose:** Web Application Firewall.
+
+**Project Usage:**
+
+* Protect against SQL Injection.
+* Protect against XSS.
+
+**Implementation:**
+
+* Attach WAF to ALB.
+
+---
+
+# 6. Monitoring Services
+
+## CloudWatch
+
+**Purpose:** Monitoring and alerting.
+
+**Project Usage:**
+
+* CPU monitoring.
+* Memory monitoring.
+* Log collection.
+
+**Implementation:**
+
+* Alarms.
+* Dashboards.
+* Log Groups.
+
+---
+
+## CloudTrail
+
+**Purpose:** Audit logs.
+
+**Project Usage:**
+
+* Security auditing.
+* Compliance.
+
+**Implementation:**
+
+* Track API activity.
+
+---
+
+## AWS Config
+
+**Purpose:** Resource compliance.
+
+**Project Usage:**
+
+* Security governance.
+
+**Implementation:**
+
+* Detect configuration drift.
+
+---
+
+# 7. CI/CD Services
+
+## CodeCommit
+
+**Purpose:** Git repository.
+
+**Project Usage:**
+
+* Source code management.
+
+---
+
+## CodeBuild
+
+**Purpose:** Build service.
+
+**Project Usage:**
+
+* Build Docker images.
+* Run tests.
+
+---
+
+## CodeDeploy
+
+**Purpose:** Deployment service.
+
+**Project Usage:**
+
+* Deploy applications to EC2/ECS.
+
+---
+
+## CodePipeline
+
+**Purpose:** CI/CD orchestration.
+
+**Project Usage:**
+
+* End-to-end deployment automation.
+
+---
+
+# 8. Migration Services
+
+## DMS (Database Migration Service)
+
+**Purpose:** Database migration.
+
+**Project Usage:**
+
+* Oracle → PostgreSQL migration.
+* On-prem → AWS migration.
+
+---
+
+## Application Migration Service (MGN)
+
+**Purpose:** Server migration.
+
+**Project Usage:**
+
+* Lift-and-shift migration.
+
+---
+
+# 9. Messaging Services
+
+## SQS
+
+**Purpose:** Message queue.
+
+**Project Usage:**
+
+* Decouple microservices.
+
+**Implementation:**
+
+* Producer → Queue → Consumer.
+
+---
+
+## SNS
+
+**Purpose:** Notifications.
+
+**Project Usage:**
+
+* Email alerts.
+* SMS alerts.
+
+---
+
+## EventBridge
+
+**Purpose:** Event-driven automation.
+
+**Project Usage:**
+
+* Trigger Lambda.
+* Schedule jobs.
+
+---
+
+# 10. DevOps Services Commonly Used in Projects
+
+| Service         | Real Project Usage           |
+| --------------- | ---------------------------- |
+| EC2             | Jenkins, application servers |
+| S3              | Terraform backend, logs      |
+| IAM             | User and role management     |
+| VPC             | Network isolation            |
+| Route 53        | DNS                          |
+| ALB             | Load balancing               |
+| Auto Scaling    | Dynamic scaling              |
+| CloudWatch      | Monitoring                   |
+| CloudTrail      | Auditing                     |
+| RDS             | Databases                    |
+| EKS             | Kubernetes                   |
+| ECS             | Containers                   |
+| ECR             | Docker image registry        |
+| Lambda          | Automation                   |
+| Secrets Manager | Credential management        |
+| KMS             | Encryption                   |
+| Transit Gateway | VPC connectivity             |
+| SNS/SQS         | Messaging                    |
+| EventBridge     | Scheduling and events        |
+
+### Sample Architecture Often Seen in DevOps Projects
+
+![Image](https://images.openai.com/static-rsc-4/gf_kk1aK7djg7sSD2ZYESqT1zw3vwk_u8wdeJa8l4Ceh1TB6py6kEIj1ct9sCQO-g73Ivl-c9PGYCw-n4FNPaP4PSrfY4VFBewNrEv2AW_0r2DuMGvlSs1nrTQ-N5p7OHk1lqXh6-r9D_jONkHiRZ4-px3jzGZPJQ5gY2RYHy4MOgcR6ljOfhDaLfPN5P5OA?purpose=fullsize)
+
+![Image](https://images.openai.com/static-rsc-4/hr2K-i4NgBdoKxgoD9-ZrghxUVg6uGttdqHKqPnVpCz_T-smX7HzbSJCsGPxUM6SZv3WqkNtJmA3AfiZkzOzLTX_FLY18pIXuB4pGmI6CdeTzts2evPZKENo1YjdIMoL_ZDMJuR4hXz-FVyq1DGUodgk7RVQNJmJmXUmeUnwfaOeK-Ig9lgSJCTTnCDEUima?purpose=fullsize)
+
+![Image](https://images.openai.com/static-rsc-4/mhKKewecKXcVSUcFdeTIRD-xYgpZu88-zU7hiqD-Vn_1fIExosSsS5Fws-i2BJ-gsKHJZGYEBVNgIB30dU3HqLehEw8gN-nmp5solcxugPm0kdu8HWK6Lyl4pmqsKNtRQMNCBDa9jijFSJ-cLSU25Ih1tXqeHjBKrk1AwS3oCTC9EQ2NVvMsbukHT_HEB-RL?purpose=fullsize)
+
+![Image](https://images.openai.com/static-rsc-4/jHifz1qN8MfVais0ivLSoB5c8P1PfMRCe9kFETBIUap4ESSo-SFH9OhlCKFjMc1CWs2Sby9tqxExvTolqB6U_0lqLmSt82sXPPUSuf2SuDgtMBSd4BFCUfMBt1TNV1u6AafZ0sx6NXssEtmEAEoY_FbW0vBDEzohcSgu-mbBWBAeBqmltJetZtj_xLg4okhi?purpose=fullsize)
+
+**Flow:**
+
+1. User → Route 53
+2. Route 53 → ALB
+3. ALB → EC2/EKS Application
+4. Application → RDS/DynamoDB
+5. Logs → CloudWatch
+6. Secrets → Secrets Manager
+7. Images → ECR
+8. CI/CD → Jenkins/CodePipeline
+9. Infrastructure → Terraform
+10. Monitoring → CloudWatch + SNS Alerts
+
+This architecture and these services cover about **80–90% of the AWS services commonly discussed in DevOps L2 interviews**.
