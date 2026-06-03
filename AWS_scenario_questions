@@ -1,0 +1,355 @@
+For an **Ensono L2 DevOps/Cloud Engineer interview**, AWS questions are usually scenario-based and focused on implementation, troubleshooting, security, automation, and cost optimization rather than just definitions.
+
+## 1. Multi-Tier Application Architecture
+
+### Question
+
+Design a highly available web application in AWS for production.
+
+### Expected Answer
+
+* VPC across 2 or more Availability Zones
+* Public subnets for Load Balancer
+* Private subnets for EC2 instances
+* Auto Scaling Group for application servers
+* RDS Multi-AZ for database
+* NAT Gateway for outbound internet access
+* Security Groups and NACLs for security
+* Route 53 for DNS
+* CloudWatch for monitoring
+
+---
+
+## 2. EC2 Auto Scaling Scenario
+
+### Question
+
+Website traffic increases significantly during business hours. How would you automate scaling?
+
+### Expected Answer
+
+* Create Auto Scaling Group
+* Define Launch Template
+* Configure Target Tracking Policy
+* Scale out at 70% CPU
+* Scale in at 30% CPU
+* Attach ALB
+
+---
+
+## 3. Application Not Accessible
+
+### Question
+
+Users cannot access an application hosted on EC2. What would you check?
+
+### Expected Answer
+
+1. EC2 status checks
+2. Security Groups
+3. NACLs
+4. Route Tables
+5. ALB Target Health
+6. Application service status
+7. CloudWatch Logs
+8. Instance CPU/Memory
+
+---
+
+## 4. Secure S3 Bucket
+
+### Question
+
+How would you implement a secure S3 bucket for storing application logs?
+
+### Expected Answer
+
+* Block Public Access enabled
+* SSE-KMS encryption
+* Bucket Versioning
+* Lifecycle Policy
+* IAM least privilege
+* CloudTrail logging
+
+---
+
+## 5. VPC Design
+
+### Question
+
+Create a VPC architecture where database servers should never be exposed to the internet.
+
+### Expected Answer
+
+* Public subnet → ALB
+* Private subnet → App Servers
+* Private subnet → RDS
+* No Internet Gateway route for DB subnet
+* Access only through application layer
+
+---
+
+## 6. Disaster Recovery
+
+### Question
+
+Production database region becomes unavailable. What DR strategy would you implement?
+
+### Expected Answer
+
+* RDS Cross-Region Read Replica
+* Automated Snapshots
+* Route53 Failover
+* Infrastructure as Code (Terraform)
+* Backup validation
+
+---
+
+## 7. Cost Optimization
+
+### Question
+
+Management wants to reduce AWS costs.
+
+### Expected Answer
+
+* Rightsize EC2
+* Use Savings Plans
+* Use Spot Instances for non-production
+* Delete unused EBS volumes
+* S3 Lifecycle policies
+* Enable Cost Explorer
+
+---
+
+## 8. IAM Security Scenario
+
+### Question
+
+Developers need access to EC2 but should not terminate instances.
+
+### Expected Answer
+
+Create IAM policy:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "ec2:Describe*",
+        "ec2:StartInstances",
+        "ec2:StopInstances"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+}
+```
+
+No terminate permission granted.
+
+---
+
+## 9. Route53 Failover
+
+### Question
+
+How would you implement automatic failover between primary and DR sites?
+
+### Expected Answer
+
+* Route53 Health Checks
+* Primary record
+* Secondary failover record
+* DNS automatically redirects traffic
+
+---
+
+## 10. ALB vs NLB
+
+### Question
+
+Your application needs URL-based routing. Which load balancer will you choose?
+
+### Expected Answer
+
+* ALB
+* Supports path-based routing
+* Host-based routing
+* SSL termination
+
+---
+
+## 11. Private EC2 Access
+
+### Question
+
+EC2 is in a private subnet. How will administrators connect?
+
+### Expected Answer
+
+* AWS Systems Manager Session Manager (Preferred)
+* Bastion Host
+* VPN Connection
+
+---
+
+## 12. EKS Implementation
+
+### Question
+
+Application is running on Kubernetes. How would you deploy it in AWS?
+
+### Expected Answer
+
+* Create EKS Cluster
+* Managed Node Groups
+* ALB Ingress Controller
+* IAM Roles for Service Accounts
+* Cluster Autoscaler
+* ECR for container images
+
+---
+
+## 13. Logging and Monitoring
+
+### Question
+
+CPU utilization suddenly spikes. How would you investigate?
+
+### Expected Answer
+
+* CloudWatch Metrics
+* CloudWatch Logs
+* Application logs
+* Load Balancer metrics
+* VPC Flow Logs
+* X-Ray tracing
+
+---
+
+## 14. Terraform + AWS
+
+### Question
+
+You need to deploy identical infrastructure in Dev, QA, and Prod.
+
+### Expected Answer
+
+* Reusable Terraform Modules
+* Separate state files
+* Separate backend configuration
+* Variables per environment
+* CI/CD deployment
+
+---
+
+## 15. S3 Cross-Region Replication
+
+### Question
+
+How would you replicate production data to another region automatically?
+
+### Expected Answer
+
+* Enable Versioning
+* Configure CRR
+* Create IAM replication role
+* Define destination bucket
+
+---
+
+## 16. Migration Scenario
+
+### Question
+
+An on-premises application must be migrated to AWS with minimal downtime.
+
+### Expected Answer
+
+* AWS Application Migration Service (MGN)
+* Pilot Light strategy
+* Database replication
+* Cutover during maintenance window
+
+---
+
+## 17. Security Incident
+
+### Question
+
+An EC2 instance is suspected to be compromised. What actions would you take?
+
+### Expected Answer
+
+1. Isolate instance using Security Groups
+2. Take EBS snapshot
+3. Analyze CloudTrail logs
+4. Review IAM permissions
+5. Launch clean instance
+6. Rotate credentials
+
+---
+
+## 18. Lambda Automation
+
+### Question
+
+Daily cleanup of old snapshots is required. How would you automate?
+
+### Expected Answer
+
+* EventBridge Schedule
+* Lambda Function
+* Boto3 SDK
+* Delete snapshots older than X days
+
+---
+
+## 19. Multi-Account AWS Environment
+
+### Question
+
+How would you manage AWS accounts for Dev, QA, and Prod?
+
+### Expected Answer
+
+* AWS Organizations
+* Separate accounts
+* SCPs
+* Centralized logging
+* Cross-account IAM roles
+
+---
+
+## 20. Real L2 Troubleshooting Question
+
+### Question
+
+An application behind an ALB is returning 502 errors. What would you check?
+
+### Expected Answer
+
+* Target group health
+* Application process status
+* Security Group rules
+* Listener configuration
+* Application logs
+* Port mapping
+* Backend response timeout
+
+### Interview Tip
+
+For Ensono L2 roles, be prepared to explain:
+
+* How you implemented AWS services in projects.
+* Troubleshooting steps you followed.
+* Terraform code used for AWS resources.
+* CI/CD deployment into AWS.
+* Security best practices (IAM, KMS, Security Groups, Secrets Manager).
+* Cost optimization and high-availability architecture decisions.
+
+These implementation-focused questions are commonly asked for candidates with 4–6 years of AWS/DevOps experience.
